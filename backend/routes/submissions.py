@@ -24,9 +24,9 @@ class ScoreRequest(BaseModel):
 
 @router.post("/submit-image")
 def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
-    # Gemini Image Generation API Call (Imagen 3 via REST)
-    # Note: Using Google AI Studio REST endpoint for Imagen
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/imagen-3:predict?key={GOOGLE_API_KEY}"
+    # Gemini Image Generation API Call (Imagen 3.0 via REST)
+    # Using the standard Imagen 3.0 model name for AI Studio
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key={GOOGLE_API_KEY}"
     
     payload = {
         "instances": [
@@ -76,7 +76,8 @@ def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
 @router.post("/submit-text")
 def submit_text(request: SubmissionRequest, db: Session = Depends(get_db)):
     # Gemini Text Generation API Call
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GOOGLE_API_KEY}"
+    # Using gemini-1.5-flash-latest for better stability
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={GOOGLE_API_KEY}"
     
     payload = {
         "contents": [{
