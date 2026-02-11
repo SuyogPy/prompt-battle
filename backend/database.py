@@ -4,8 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 
-# explicitly load the .env file from backend/routes
-dotenv_path = os.path.join(os.path.dirname(__file__), 'routes', '.env')
+# explicitly load the .env file from the backend folder
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 # load environment variables
