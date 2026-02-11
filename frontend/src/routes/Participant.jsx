@@ -12,12 +12,16 @@ const Participant = () => {
     const [locked, setLocked] = useState(false);
 
     useEffect(() => {
-        const isLocked = localStorage.getItem(`promptbattle_locked_${round}`);
+        const isLocked = localStorage.getItem('promptbattle_locked_global');
         const savedResult = localStorage.getItem(`promptbattle_result_${round}`);
 
-        if (isLocked === 'true' && savedResult) {
+        if (isLocked === 'true') {
             setLocked(true);
-            setResult(JSON.parse(savedResult));
+            if (savedResult) {
+                setResult(JSON.parse(savedResult));
+            } else {
+                setResult(null);
+            }
         } else {
             setLocked(false);
             setResult(null);
@@ -38,13 +42,17 @@ const Participant = () => {
             });
 
             const data = await response.json();
-            setResult(data);
-            setLocked(true);
-            localStorage.setItem(`promptbattle_locked_${round}`, 'true');
-            localStorage.setItem(`promptbattle_result_${round}`, JSON.stringify(data));
+            if (response.ok) {
+                setResult(data);
+                setLocked(true);
+                localStorage.setItem('promptbattle_locked_global', 'true');
+                localStorage.setItem(`promptbattle_result_${round}`, JSON.stringify(data));
+            } else {
+                throw new Error(data.detail || 'Submission failed');
+            }
         } catch (error) {
             console.error('Submission failed:', error);
-            alert('Submission failed. Please try again.');
+            alert(`Error: ${error.message}`);
         } finally {
             setLoading(false);
         }

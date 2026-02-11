@@ -25,7 +25,7 @@ class ScoreRequest(BaseModel):
 @router.post("/submit-image")
 def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
     # Gemini Image Generation API Call (Imagen 3.0 via REST)
-    # Using the standard Imagen 3.0 model name for AI Studio
+    # Standard AI Studio Imagen 3.0 endpoint
     url = f"https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key={GOOGLE_API_KEY}"
     
     payload = {
@@ -76,8 +76,8 @@ def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
 @router.post("/submit-text")
 def submit_text(request: SubmissionRequest, db: Session = Depends(get_db)):
     # Gemini Text Generation API Call
-    # Using gemini-1.5-flash-latest for better stability
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={GOOGLE_API_KEY}"
+    # Use gemini-1.5-flash which is widely available
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GOOGLE_API_KEY}"
     
     payload = {
         "contents": [{
@@ -106,8 +106,10 @@ def submit_text(request: SubmissionRequest, db: Session = Depends(get_db)):
         
         return {"id": str(new_submission.id), "response": generated_text}
     except Exception as e:
-        print(f"Error generating text: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"DEBUG Error generating text: {e}")
+        if hasattr(e, 'response') and e.response is not None:
+             print(f"DEBUG API Response Body: {e.response.text}")
+        raise HTTPException(status_code=500, detail=str(f"API Error: {str(e)}"))
 
 @router.get("/image-submissions")
 def get_image_submissions(db: Session = Depends(get_db)):
