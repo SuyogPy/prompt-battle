@@ -11,7 +11,15 @@ const Participant = () => {
     const [result, setResult] = useState(null);
     const [locked, setLocked] = useState(false);
 
+    const [nameEntered, setNameEntered] = useState(false);
+
     useEffect(() => {
+        const savedName = localStorage.getItem('promptbattle_user_name');
+        if (savedName) {
+            setName(savedName);
+            setNameEntered(true);
+        }
+
         const isLocked = localStorage.getItem('promptbattle_locked_global');
         const savedResult = localStorage.getItem(`promptbattle_result_${round}`);
 
@@ -27,6 +35,14 @@ const Participant = () => {
             setResult(null);
         }
     }, [round]);
+
+    const handleNameSubmit = (e) => {
+        e.preventDefault();
+        if (name.trim()) {
+            localStorage.setItem('promptbattle_user_name', name);
+            setNameEntered(true);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -65,68 +81,95 @@ const Participant = () => {
     };
 
     return (
-        <div className="container" style={{ maxWidth: '600px' }}>
-            <RoundToggle round={round} setRound={resetForNewRound} disabled={loading || locked} />
-
-            <div className="card">
-                <h1 style={{ marginTop: 0, fontSize: '1.5rem', marginBottom: '1.5rem' }}>
-                    {round === 'image' ? 'Image Prompt Battle' : 'Text Prompt Battle'}
-                </h1>
-
-                {!locked ? (
-                    <form onSubmit={handleSubmit}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Name</label>
+        <div className="container" style={{ maxWidth: '600px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {!nameEntered && !locked ? (
+                <div className="card" style={{ textAlign: 'center' }}>
+                    <h1 style={{ marginTop: 0 }}>Welcome to Prompt Battle</h1>
+                    <p style={{ color: 'var(--text-secondary)' }}>Please enter your name to start.</p>
+                    <form onSubmit={handleNameSubmit}>
                         <input
                             className="input"
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Enter your name"
+                            placeholder="Your Full Name"
+                            autoFocus
                         />
-
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Prompt</label>
-                        <textarea
-                            className="textarea"
-                            required
-                            rows="4"
-                            value={prompt}
-                            onChange={(e) => setPrompt(e.target.value)}
-                            placeholder={round === 'image' ? "Describe the image you want to generate..." : "Enter your creative prompt..."}
-                        />
-
-                        <button className="button" type="submit" disabled={loading} style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            {loading ? <div className="spinner"></div> : 'Submit Prompt'}
+                        <button className="button" type="submit" style={{ width: '100%' }}>
+                            Continue
                         </button>
                     </form>
-                ) : (
-                    <div style={{ textAlign: 'center' }}>
-                        <h2 style={{ color: '#10b981' }}>Submission Locked</h2>
-                        <p>Your prompt has been submitted. Good luck!</p>
+                </div>
+            ) : (
+                <>
+                    <RoundToggle round={round} setRound={resetForNewRound} disabled={loading || locked} />
 
-                        {result && round === 'image' && result.image_path && (
-                            <img
-                                src={`${API_BASE}/images/${result.image_path.split('/').pop()}`}
-                                alt="Your Generated Image"
-                                style={{ width: '100%', borderRadius: '8px', marginTop: '1rem' }}
-                            />
-                        )}
+                    <div className="card">
+                        <h1 style={{ marginTop: 0, fontSize: '1.8rem', marginBottom: '1.5rem', textAlign: 'center', fontWeight: 800 }}>
+                            {round === 'image' ? 'IMAGE ROUND' : 'TEXT ROUND'}
+                        </h1>
 
-                        {result && round === 'text' && result.response && (
-                            <div style={{
-                                background: '#0f172a',
-                                padding: '1.5rem',
-                                borderRadius: '8px',
-                                marginTop: '1rem',
-                                textAlign: 'left',
-                                whiteSpace: 'pre-wrap'
-                            }}>
-                                {result.response}
+                        {!locked ? (
+                            <form onSubmit={handleSubmit}>
+                                <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
+                                    <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
+                                        PARTICIPATING AS: <strong style={{ color: 'var(--accent-color)' }}>{name.toUpperCase()}</strong>
+                                    </span>
+                                </div>
+                                <textarea
+                                    className="textarea"
+                                    required
+                                    rows="5"
+                                    value={prompt}
+                                    onChange={(e) => setPrompt(e.target.value)}
+                                    placeholder={round === 'image' ? "DESCRIBE YOUR IMAGE..." : "ENTER YOUR CREATIVE PROMPT..."}
+                                    autoFocus
+                                />
+
+                                <button className="button" type="submit" disabled={loading} style={{ width: '100%', fontSize: '1.1rem' }}>
+                                    {loading ? <div className="spinner"></div> : 'GENERATE'}
+                                </button>
+                            </form>
+                        ) : (
+                            <div style={{ textAlign: 'center' }}>
+                                <div style={{ marginBottom: '1rem', color: '#10b981', fontWeight: 800, fontSize: '1.4rem' }}>
+                                    ✓ SUBMITTED
+                                </div>
+                                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Response saved for <strong>{name}</strong>.</p>
+
+                                {result && round === 'image' && result.image_path && (
+                                    <div style={{ marginTop: '1.5rem' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>GENERATED IMAGE</label>
+                                        <img
+                                            src={`${API_BASE}/images/${result.image_path.split('/').pop()}`}
+                                            alt="Your Generated Image"
+                                            style={{ width: '100%', borderRadius: '8px', border: '1px solid var(--border-color)' }}
+                                        />
+                                    </div>
+                                )}
+
+                                {result && round === 'text' && result.response && (
+                                    <div style={{ marginTop: '1.5rem' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>AI RESPONSE</label>
+                                        <div style={{
+                                            background: '#f8fafc',
+                                            padding: '1.5rem',
+                                            borderRadius: '8px',
+                                            textAlign: 'left',
+                                            whiteSpace: 'pre-wrap',
+                                            border: '1px solid var(--border-color)',
+                                            color: 'var(--text-primary)',
+                                            fontSize: '0.95rem'
+                                        }}>
+                                            {result.response}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
-                )}
-            </div>
-
+                </>
+            )}
             <p style={{ textAlign: 'center', marginTop: '2rem', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
                 Prompt Battle by NSS-NIST
             </p>

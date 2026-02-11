@@ -6,8 +6,8 @@ const SubmissionCard = ({ submission, onSave, isImage }) => {
     return (
         <div className="card">
             <h3 style={{ margin: '0 0 0.5rem 0' }}>{submission.name}</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>
-                <strong>Prompt:</strong> {submission.prompt}
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                PROMPT: <strong>{submission.prompt.toUpperCase()}</strong>
             </p>
 
             {isImage ? (
@@ -18,12 +18,15 @@ const SubmissionCard = ({ submission, onSave, isImage }) => {
                 />
             ) : (
                 <div style={{
-                    background: '#0f172a',
-                    padding: '1rem',
-                    borderRadius: '8px',
-                    marginBottom: '1rem',
-                    fontSize: '0.9rem',
-                    whiteSpace: 'pre-wrap'
+                    background: '#f8fafc',
+                    padding: '1.2rem',
+                    borderRadius: 'var(--radius)',
+                    marginBottom: '1.5rem',
+                    fontSize: '0.95rem',
+                    whiteSpace: 'pre-wrap',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-primary)',
+                    textAlign: 'left'
                 }}>
                     {submission.response}
                 </div>

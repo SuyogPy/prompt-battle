@@ -1,46 +1,54 @@
 :root {
-  --bg-color: #f8fafc;
+  --bg-color: #ffffff;
   --card-bg: #ffffff;
-  --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  --accent-color: #007aff;
+  /* Standard DeepSeek Blue */
+  --accent-gradient: linear-gradient(135deg, #007aff 0%, #3b82f6 100%);
   --text-primary: #1e293b;
   --text-secondary: #64748b;
-  --border-color: #e2e8f0;
-  --radius: 12px;
-  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --border-color: #f1f5f9;
+  --radius: 16px;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+html,
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-color);
+  background: var(--bg-color);
   color: var(--text-primary);
   font-family: var(--font-family);
-  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .button {
   background: var(--accent-gradient);
   color: white;
   border: none;
-  border-radius: var(--radius);
-  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  padding: 1rem 2rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  transition: opacity 0.2s;
 }
 
 .button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+  opacity: 0.9;
 }
 
 .button:disabled {
@@ -52,14 +60,16 @@ body {
 
 .input,
 .textarea {
-  background: #ffffff;
-  border: 1px solid var(--border-color);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: var(--radius);
   color: var(--text-primary);
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  text-align: center;
 }
 
 .input:focus,

@@ -60,20 +60,20 @@ const Judge = () => {
 
     if (!isAuthenticated) {
         return (
-            <div className="container" style={{ maxWidth: '400px', marginTop: '100px' }}>
-                <div className="card">
-                    <h2 style={{ marginTop: 0 }}>Judge Access</h2>
-                    <form onSubmit={handleLogin}>
-                        <input
-                            type="password"
-                            className="input"
-                            placeholder="Enter Access Code"
-                            value={accessCode}
-                            onChange={(e) => setAccessCode(e.target.value)}
-                        />
-                        {error && <p style={{ color: '#ef4444', fontSize: '0.8rem' }}>{error}</p>}
-                        <button className="button" type="submit" style={{ width: '100%' }}>Login</button>
-                    </form>
+            <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div className="card" style={{ maxWidth: '400px', margin: '0 auto' }}>
+                    <h2 style={{ marginTop: 0 }}>JUDGE ACCESS</h2>
+                    <input
+                        type="password"
+                        className="input"
+                        placeholder="Enter Access Code"
+                        value={accessCode}
+                        onChange={(e) => setAccessCode(e.target.value)}
+                    />
+                    {error && <p style={{ color: '#ef4444', fontSize: '0.8rem' }}>{error}</p>}
+                    <button className="button" style={{ width: '100%' }} onClick={handleLogin}>
+                        AUTHORIZE
+                    </button>
                 </div>
             </div>
         );
@@ -83,20 +83,32 @@ const Judge = () => {
         <div className="container">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <h1 style={{ margin: 0 }}>Judge Dashboard</h1>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', justifyContent: 'center' }}>
                     <button
                         className="button"
                         onClick={() => setRound('image')}
-                        style={{ padding: '0.5rem 1rem', background: round === 'image' ? 'var(--accent-gradient)' : '#1f2937' }}
+                        style={{
+                            padding: '0.5rem 1.5rem',
+                            background: round === 'image' ? 'var(--accent-gradient)' : '#f1f5f9',
+                            color: round === 'image' ? 'white' : 'var(--text-secondary)',
+                            fontSize: '0.8rem',
+                            fontWeight: 700
+                        }}
                     >
-                        Image Round
+                        IMAGE ROUND
                     </button>
                     <button
                         className="button"
                         onClick={() => setRound('text')}
-                        style={{ padding: '0.5rem 1rem', background: round === 'text' ? 'var(--accent-gradient)' : '#1f2937' }}
+                        style={{
+                            padding: '0.5rem 1.5rem',
+                            background: round === 'text' ? 'var(--accent-gradient)' : '#f1f5f9',
+                            color: round === 'text' ? 'white' : 'var(--text-secondary)',
+                            fontSize: '0.8rem',
+                            fontWeight: 700
+                        }}
                     >
-                        Text Round
+                        TEXT ROUND
                     </button>
                 </div>
             </div>

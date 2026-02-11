@@ -20,6 +20,15 @@ if not GOOGLE_API_KEY:
 
 # set up SQLAlchemy engine and session with SSL for Supabase
 engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
+
+# Test connection and log errors
+try:
+    with engine.connect() as connection:
+        print("DATABASE DEBUG: Successfully connected to Supabase.")
+except Exception as e:
+    print(f"DATABASE ERROR: Failed to connect to Supabase. Error: {e}")
+    print(f"DATABASE URL USED: {DATABASE_URL.split('@')[0]}@*** (masked)")
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

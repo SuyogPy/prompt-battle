@@ -24,35 +24,23 @@ class ScoreRequest(BaseModel):
 
 @router.post("/submit-image")
 def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
-    # Gemini Image Generation API Call (Imagen 3.0 via REST)
-    # Standard AI Studio Imagen 3.0 endpoint
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key={GOOGLE_API_KEY}"
+    # Pollinations.ai Image Generation (Free, No API Key)
+    import random
+    from urllib.parse import quote
     
-    payload = {
-        "instances": [
-            {
-                "prompt": request.prompt
-            }
-        ],
-        "parameters": {
-            "sampleCount": 1
-        }
-    }
+    seed = random.randint(0, 1000000)
+    prompt_encoded = quote(request.prompt)
+    url = f"https://pollinations.ai/p/{prompt_encoded}?width=1024&height=1024&seed={seed}&model=flux&nologo=true"
     
     try:
-        response = requests.post(url, json=payload)
+        print(f"DEBUG: Requesting image from Pollinations: {url}")
+        response = requests.get(url)
         response.raise_for_status()
-        data = response.json()
         
-        # In Google AI Studio REST, the image is likely in predictions[0][bytesBase64Encoded]
-        # Adjusting based on standard Gemini REST API for images
-        image_data_base64 = data['predictions'][0]['bytesBase64Encoded']
-        image_data = base64.b64decode(image_data_base64)
-        
+        image_data = response.content
         filename = f"{uuid.uuid4()}.png"
         file_path = f"generated_images/{filename}"
         
-        # Ensure directory exists
         os.makedirs("generated_images", exist_ok=True)
         
         with open(file_path, "wb") as f:
@@ -66,18 +54,18 @@ def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
         db.add(new_submission)
         db.commit()
         db.refresh(new_submission)
-        print(f"DEBUG: Successfully stored image round for {request.name}. ID: {new_submission.id}")
+        print(f"DEBUG: Successfully stored image round (Pollinations) for {request.name}. ID: {new_submission.id}")
         
         return {"id": str(new_submission.id), "image_path": file_path}
     except Exception as e:
-        print(f"Error generating image: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"DEBUG Error generating image with Pollinations: {e}")
+        raise HTTPException(status_code=500, detail=str(f"Image API Error: {str(e)}"))
 
 @router.post("/submit-text")
 def submit_text(request: SubmissionRequest, db: Session = Depends(get_db)):
     # Gemini Text Generation API Call
-    # Use gemini-1.5-flash which is widely available
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GOOGLE_API_KEY}"
+    # Using gemini-2.0-flash as gemini-1.5-flash was not in the available models list
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GOOGLE_API_KEY}"
     
     payload = {
         "contents": [{

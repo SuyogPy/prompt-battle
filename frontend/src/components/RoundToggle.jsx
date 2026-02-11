@@ -2,28 +2,36 @@ import React from 'react';
 
 const RoundToggle = ({ round, setRound, disabled }) => {
     return (
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem', width: '100%', maxWidth: '600px' }}>
             <button
                 className="button"
                 style={{
-                    background: round === 'image' ? 'var(--accent-gradient)' : '#1f2937',
-                    flex: 1
+                    background: round === 'image' ? 'var(--accent-gradient)' : '#f1f5f9',
+                    color: round === 'image' ? 'white' : 'var(--text-secondary)',
+                    flex: 1,
+                    fontSize: '0.8rem',
+                    letterSpacing: '0.05em',
+                    fontWeight: 700
                 }}
                 onClick={() => setRound('image')}
                 disabled={disabled}
             >
-                Round 1: Image
+                ROUND 1: IMAGE
             </button>
             <button
                 className="button"
                 style={{
-                    background: round === 'text' ? 'var(--accent-gradient)' : '#1f2937',
-                    flex: 1
+                    background: round === 'text' ? 'var(--accent-gradient)' : '#f1f5f9',
+                    color: round === 'text' ? 'white' : 'var(--text-secondary)',
+                    flex: 1,
+                    fontSize: '0.8rem',
+                    letterSpacing: '0.05em',
+                    fontWeight: 700
                 }}
                 onClick={() => setRound('text')}
                 disabled={disabled}
             >
-                Round 2: Text
+                ROUND 2: TEXT
             </button>
         </div>
     );
