@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Text
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from datetime import datetime
-from .database import Base
+from database import Base
 
 class ImageRound(Base):
     __tablename__ = "image_round"

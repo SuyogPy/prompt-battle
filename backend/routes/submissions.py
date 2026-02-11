@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from ..database import get_db
-from ..models import ImageRound, TextRound
+from database import get_db
+from models import ImageRound, TextRound
 from pydantic import BaseModel
 import os
 import requests
