@@ -10,13 +10,13 @@ load_dotenv(dotenv_path)
 
 # load environment variables
 DATABASE_URL = os.getenv("DATABASE_URL")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 # sanity checks
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL not found. Check your .env file path or content.")
-if not GOOGLE_API_KEY:
-    raise ValueError("GOOGLE_API_KEY not found. Check your .env file path or content.")
+if not GROQ_API_KEY:
+    raise ValueError("GROQ_API_KEY not found. Check your .env file path or content.")
 
 # set up SQLAlchemy engine and session with SSL for Supabase
 engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
