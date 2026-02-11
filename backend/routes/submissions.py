@@ -29,11 +29,18 @@ class SubmissionRequest(BaseModel):
     name: str
     prompt: str
 
+    def validate_content(self):
+        if not self.name or len(self.name.strip()) < 2:
+            raise HTTPException(status_code=400, detail="Name must be at least 2 characters long.")
+        if not self.prompt or len(self.prompt.strip()) < 10:
+            raise HTTPException(status_code=400, detail="Prompt must be at least 10 characters long to ensure quality results.")
+
 class ScoreRequest(BaseModel):
     score: int
 
 @router.post("/submit-image")
 def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
+    request.validate_content()
     # Pollinations.ai Image Generation (Free, No API Key)
     import random
     from urllib.parse import quote
@@ -74,6 +81,7 @@ def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
 
 @router.post("/submit-text")
 def submit_text(request: SubmissionRequest, db: Session = Depends(get_db)):
+    request.validate_content()
     # Groq Text Generation (OpenAI-compatible)
     try:
         completion = client.chat.completions.create(

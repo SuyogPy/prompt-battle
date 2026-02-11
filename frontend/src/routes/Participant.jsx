@@ -49,12 +49,17 @@ const Participant = () => {
         setLoading(true);
 
         const endpoint = round === 'image' ? '/submit-image' : '/submit-text';
+        if (prompt.trim().length < 10) {
+            alert("Prompt must be at least 10 characters long.");
+            setLoading(false);
+            return;
+        }
 
         try {
             const response = await fetch(`${API_BASE}${endpoint}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, prompt }),
+                body: JSON.stringify({ name: name.trim(), prompt: prompt.trim() }),
             });
 
             const data = await response.json();
@@ -108,7 +113,6 @@ const Participant = () => {
                         <h1 style={{ marginTop: 0, fontSize: '1.8rem', marginBottom: '1.5rem', textAlign: 'center', fontWeight: 800 }}>
                             {round === 'image' ? 'IMAGE ROUND' : 'TEXT ROUND'}
                         </h1>
-
                         {!locked ? (
                             <form onSubmit={handleSubmit}>
                                 <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
@@ -133,22 +137,24 @@ const Participant = () => {
                         ) : (
                             <div style={{ textAlign: 'center' }}>
                                 <div style={{ marginBottom: '1rem', color: '#10b981', fontWeight: 800, fontSize: '1.4rem' }}>
-                                    ✓ SUBMITTED
+                                    SUBMITTED SUCCESSFULLY
                                 </div>
                                 <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Response saved for <strong>{name}</strong>.</p>
 
-                                <div style={{ marginTop: '1.5rem', width: '100%' }}>
-                                    <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700 }}>GENERATED IMAGE</label>
-                                    <img
-                                        src={`${API_BASE}/images/${result.image_path.split('/').pop()}`}
-                                        alt="Generated"
-                                        style={{ width: '100%', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                                    />
-                                </div>
+                                {round === 'image' && result && result.image_path && (
+                                    <div style={{ marginTop: '1.5rem', width: '100%' }}>
+                                        <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700 }}>GENERATED IMAGE</label>
+                                        <img
+                                            src={`${API_BASE}/images/${result.image_path.split('/').pop()}`}
+                                            alt="Generated"
+                                            style={{ width: '100%', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                                        />
+                                    </div>
+                                )}
 
-                                {result && round === 'text' && result.response && (
+                                {round === 'text' && result && result.response && (
                                     <div style={{ marginTop: '1.5rem' }}>
-                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>AI RESPONSE</label>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700 }}>AI RESPONSE (POEM)</label>
                                         <div style={{
                                             background: '#f8fafc',
                                             padding: '1.5rem',
@@ -157,7 +163,9 @@ const Participant = () => {
                                             whiteSpace: 'pre-wrap',
                                             border: '1px solid var(--border-color)',
                                             color: 'var(--text-primary)',
-                                            fontSize: '0.95rem'
+                                            fontSize: '0.95rem',
+                                            lineHeight: '1.6',
+                                            fontStyle: 'italic'
                                         }}>
                                             {result.response}
                                         </div>
