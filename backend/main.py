@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from .routes import submissions
+from routes import submissions
 import os
 
 app = FastAPI(title="Prompt Battle API")
