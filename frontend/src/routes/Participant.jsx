@@ -137,16 +137,14 @@ const Participant = () => {
                                 </div>
                                 <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Response saved for <strong>{name}</strong>.</p>
 
-                                {result && round === 'image' && result.image_path && (
-                                    <div style={{ marginTop: '1.5rem' }}>
-                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>GENERATED IMAGE</label>
-                                        <img
-                                            src={`${API_BASE}/images/${result.image_path.split('/').pop()}`}
-                                            alt="Your Generated Image"
-                                            style={{ width: '100%', borderRadius: '8px', border: '1px solid var(--border-color)' }}
-                                        />
-                                    </div>
-                                )}
+                                <div style={{ marginTop: '1.5rem', width: '100%' }}>
+                                    <label style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700 }}>GENERATED IMAGE</label>
+                                    <img
+                                        src={`${API_BASE}/images/${result.image_path.split('/').pop()}`}
+                                        alt="Generated"
+                                        style={{ width: '100%', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                                    />
+                                </div>
 
                                 {result && round === 'text' && result.response && (
                                     <div style={{ marginTop: '1.5rem' }}>

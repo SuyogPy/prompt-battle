@@ -30,7 +30,8 @@ def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
     
     seed = random.randint(0, 1000000)
     prompt_encoded = quote(request.prompt)
-    url = f"https://pollinations.ai/p/{prompt_encoded}?width=1024&height=1024&seed={seed}&model=flux&nologo=true"
+    # Using image.pollinations.ai which is more reliable for direct requests
+    url = f"https://image.pollinations.ai/prompt/{prompt_encoded}?width=1024&height=1024&seed={seed}&model=flux&nologo=true"
     
     try:
         print(f"DEBUG: Requesting image from Pollinations: {url}")

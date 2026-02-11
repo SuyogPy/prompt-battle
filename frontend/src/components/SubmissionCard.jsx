@@ -11,11 +11,18 @@ const SubmissionCard = ({ submission, onSave, isImage }) => {
             </p>
 
             {isImage ? (
-                <img
-                    src={`http://${window.location.hostname}:8000/images/${submission.image_path.split('/').pop()}`}
-                    alt="Generated"
-                    style={{ width: '100%', borderRadius: '8px', marginBottom: '1rem' }}
-                />
+                <div style={{ width: '100%', marginBottom: '1.5rem' }}>
+                    <img
+                        src={`http://${window.location.hostname}:8000/images/${submission.image_path.split('/').pop()}`}
+                        alt="Generated"
+                        style={{ width: '100%', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)' }}
+                        onLoad={(e) => console.log("Image loaded successfully")}
+                        onError={(e) => {
+                            console.error("Image failed to load:", e.target.src);
+                            e.target.style.display = 'none';
+                        }}
+                    />
+                </div>
             ) : (
                 <div style={{
                     background: '#f8fafc',
