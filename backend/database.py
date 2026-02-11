@@ -18,8 +18,8 @@ if not DATABASE_URL:
 if not GOOGLE_API_KEY:
     raise ValueError("GOOGLE_API_KEY not found. Check your .env file path or content.")
 
-# set up SQLAlchemy engine and session
-engine = create_engine(DATABASE_URL)
+# set up SQLAlchemy engine and session with SSL for Supabase
+engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

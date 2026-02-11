@@ -66,6 +66,7 @@ def submit_image(request: SubmissionRequest, db: Session = Depends(get_db)):
         db.add(new_submission)
         db.commit()
         db.refresh(new_submission)
+        print(f"DEBUG: Successfully stored image round for {request.name}. ID: {new_submission.id}")
         
         return {"id": str(new_submission.id), "image_path": file_path}
     except Exception as e:
@@ -100,6 +101,7 @@ def submit_text(request: SubmissionRequest, db: Session = Depends(get_db)):
         db.add(new_submission)
         db.commit()
         db.refresh(new_submission)
+        print(f"DEBUG: Successfully stored text round for {request.name}. ID: {new_submission.id}")
         
         return {"id": str(new_submission.id), "response": generated_text}
     except Exception as e:

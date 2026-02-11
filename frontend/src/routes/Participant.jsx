@@ -12,12 +12,15 @@ const Participant = () => {
     const [locked, setLocked] = useState(false);
 
     useEffect(() => {
-        const isLocked = localStorage.getItem('promptbattle_locked');
-        const savedRound = localStorage.getItem('promptbattle_round');
-        if (isLocked === 'true' && savedRound === round) {
+        const isLocked = localStorage.getItem(`promptbattle_locked_${round}`);
+        const savedResult = localStorage.getItem(`promptbattle_result_${round}`);
+
+        if (isLocked === 'true' && savedResult) {
             setLocked(true);
+            setResult(JSON.parse(savedResult));
         } else {
             setLocked(false);
+            setResult(null);
         }
     }, [round]);
 
@@ -37,8 +40,8 @@ const Participant = () => {
             const data = await response.json();
             setResult(data);
             setLocked(true);
-            localStorage.setItem('promptbattle_locked', 'true');
-            localStorage.setItem('promptbattle_round', round);
+            localStorage.setItem(`promptbattle_locked_${round}`, 'true');
+            localStorage.setItem(`promptbattle_result_${round}`, JSON.stringify(data));
         } catch (error) {
             console.error('Submission failed:', error);
             alert('Submission failed. Please try again.');
