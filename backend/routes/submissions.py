@@ -113,11 +113,15 @@ def submit_text(request: SubmissionRequest, db: Session = Depends(get_db)):
 
 @router.get("/image-submissions")
 def get_image_submissions(db: Session = Depends(get_db)):
-    return db.query(ImageRound).order_by(ImageRound.created_at.desc()).all()
+    submissions = db.query(ImageRound).order_by(ImageRound.created_at.desc()).all()
+    # Filter out placeholder images
+    return [s for s in submissions if not (s.image_path and s.image_path.startswith("https://via.placeholder.com"))]
 
 @router.get("/text-submissions")
 def get_text_submissions(db: Session = Depends(get_db)):
-    return db.query(TextRound).order_by(TextRound.created_at.desc()).all()
+    submissions = db.query(TextRound).order_by(TextRound.created_at.desc()).all()
+    # Filter out responses with fewer than 8 words
+    return [s for s in submissions if s.response and len(s.response.split()) >= 8]
 
 @router.put("/score-image/{id}")
 def score_image(id: str, request: ScoreRequest, db: Session = Depends(get_db)):
